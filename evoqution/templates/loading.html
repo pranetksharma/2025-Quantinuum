@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="h-full bg-gray-900">
+<head>
+    <title>evoQution - Quantum Analysis in Progress</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap">
+    <style>
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        @keyframes wave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .quantum-gradient {
+            background: linear-gradient(
+                90deg,
+                #06b6d4 0%,
+                #3b82f6 25%,
+                #6366f1 50%,
+                #3b82f6 75%,
+                #06b6d4 100%
+            );
+            background-size: 400% 400%;
+            animation: wave 3s ease infinite;
+        }
+    </style>
+</head>
+<body class="h-full bg-gradient-to-br from-gray-900 via-blue-900 to-cyan-900 flex items-center justify-center">
+    <div class="text-center w-96">
+        <h2 class="tech-font text-4xl font-bold text-cyan-400 mb-4">
+            <span class="text-cyan-400">Q</span>uantum Analysis
+        </h2>
+        
+        <div class="mb-6">
+            <p class="text-white text-lg mb-4">Conducting time evolution of <span id="moleculeName" class="font-bold text-cyan-300"></span></p>
+            <div class="h-3 bg-gray-800 rounded-full overflow-hidden">
+                <div id="progressBar" class="quantum-gradient h-full w-0 transition-all duration-1000 ease-out"></div>
+            </div>
+            <div class="tech-font text-cyan-400 text-xl mt-2">
+                <span id="progressPercentage">0</span>% Complete
+            </div>
+        </div>
+
+        <div class="text-gray-400 text-sm space-y-1">
+            <p>Current Operation: Adiabatic State Evolution</p>
+        </div>
+    </div>
+
+    <script>
+        // Get random duration between 5-10 seconds
+        const minDuration = 5000; // 5 seconds
+        const maxDuration = 10000; // 10 seconds
+        const duration = Math.random() * (maxDuration - minDuration) + minDuration;
+        const startTime = Date.now();
+        
+        // Get elements
+        const progressBar = document.getElementById('progressBar');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const moleculeName = document.getElementById('moleculeName');
+        
+        // Get molecule from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        moleculeName.textContent = urlParams.get('molecule');
+
+        function updateProgress() {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min((elapsed / duration) * 100, 100);
+            
+            progressBar.style.width = `${progress}%`;
+            progressPercentage.textContent = Math.floor(progress);
+            
+            if (progress < 100) {
+                requestAnimationFrame(updateProgress);
+            } else {
+                window.location.href = `/results?molecule=${encodeURIComponent(urlParams.get('molecule'))}`;
+            }
+        }
+
+        // Start animation
+        requestAnimationFrame(updateProgress);
+    </script>
+</body>
+</html>
